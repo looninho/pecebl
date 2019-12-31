@@ -24,7 +24,7 @@ Activate your virtual environment: `activate yourenv`
 
 You can install in local mode using: `python setup.py install`
 
-or using pip : `pip install pecebl`
+or using pip : `pip install -i https://test.pypi.org/simple/ pecebl`
 
 # Getting started
 ## Pattern designer and PSF import
