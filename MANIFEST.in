@@ -1,0 +1,5 @@
+include README.md
+include README.rst
+include environment.yml
+include LICENSE.txt
+include examples/data/*
