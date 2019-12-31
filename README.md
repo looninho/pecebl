@@ -67,7 +67,7 @@ Now we can get the pre-psf data:
 `pre_psf=get_pre_psf(1e7, sim, 6, meb.beam_current, i_y=3, i_z=3)`
 
 ## Exposure process
-### Build the PSF data
+### Building the PSF data
 *NP* is the number of pixels, *WF* is the writefield (nm). We can calculate the *pixel_size* then map the two columns data *pre_psf* to a 2D matrix *z_psf* of size *(WF, WF)* $(nm^2)$ (or *(NP, NP)* $(pixel^2)$):
 
 `NP = 2048; WF = 5000`
@@ -93,7 +93,7 @@ We need to transform the *z_psf* data prior to apply the FFT (Victor Podlozhnyuk
 
 `del z_psf`
 
-### Build the dose distribution
+### Building the dose distribution
 We need to 'cut' data in blocks and grid for parallel calculation on GPU.
 
 `from sympy.ntheory import primefactors`
