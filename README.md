@@ -113,7 +113,7 @@ We can change the exposure dose for $30\mu C/cm^2$ (`ss = 4`, `speed = 6`):
 ### Exposure
 We have the PSF and the dose distribution, we can do a FFT convolution to expose our pattern:
 
-`from pecebl.fft_ops import FFT_ops as fft`
+`from pecebl.fft_ops import fft_ops as fft`
 
 `z = fft.fft_exposure(ppsf, dose_dis)`
 
