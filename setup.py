@@ -33,17 +33,15 @@ setup(
         ],
     },
     install_requires=[
-        'numpy','scipy', 'matplotlib', 'ipython==7.8.0', 'jupyter', 
-        'pandas', 'sympy', 'numba', 'pyculib', 'imageio', 'pyqtgraph', 
-        'pyopengl', 'pycuda', 'scikit-cuda',
+        'numpy','scipy', 'sympy', 'numba', 'matplotlib', 
+        'ipython==7.8.0', 'jupyter', 'pandas', 'pyculib', 
+        'imageio', 'pyqtgraph', 'pyopengl', 'pycuda', 'scikit-cuda',
     ],
     dependency_links=[
         "https://anaconda.org/anaconda/cudatoolkit",
         "https://anaconda.org/anaconda/pyqt",
         "https://anaconda.org/anaconda/pywin32",
     ],
-    test_suite = 'nose.collector',
-    tests_require = ['nose'],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Science/Research",
