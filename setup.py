@@ -33,14 +33,9 @@ setup(
         ],
     },
     install_requires=[
-        'numpy','scipy', 'sympy', 'numba', 'matplotlib', 
-        'ipython==7.8.0', 'jupyter', 'pandas', 'pyculib', 
-        'imageio', 'pyqtgraph', 'pyopengl', 'pycuda', 'scikit-cuda',
-    ],
-    dependency_links=[
-        "https://anaconda.org/anaconda/cudatoolkit",
-        "https://anaconda.org/anaconda/pyqt",
-        "https://anaconda.org/anaconda/pywin32",
+        'ipython==7.8.0', 'jupyter', 'numba', 'numpy','scipy', 
+        'sympy', 'pandas', 'pyqtgraph', 'pyopengl', 'matplotlib', 
+        'imageio', 'pyculib', 'pycuda', 'scikit-cuda',
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -57,5 +52,5 @@ setup(
     ],
     keywords = ['lithography', 'proximity effect correction','ebl', 'pec', 
         'fft', 'convolution', 'deconvolution','ebeam-lithography', 
-        'monte-carlo-simulation', 'casino3'],
+        'monte-carlo-simulation', 'casino', 'casino3'],
 )

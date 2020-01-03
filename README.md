@@ -124,7 +124,7 @@ We have the PSF and the dose distribution, we can do a FFT convolution to expose
 `plt.show()`
 
 ## Develop
-Development process is simplified by threshold operation. We use a threshold of *3 eV* for ZEP520A ebeam resist.
+The development process is simplified by a threshold operation. We use a threshold of *3 eV* for ZEP520A ebeam resist.
 
 `th_resist = 3`
 
@@ -132,7 +132,7 @@ Development process is simplified by threshold operation. We use a threshold of 
 
 `z_dev[z_dev > 0] = 1`
 
-plot de development result:
+plot the development result:
 
 `plt.imshow(z_dev,origin='lower', extent=[-WF/2, WF/2, -WF/2, WF/2])`
 

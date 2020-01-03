@@ -40,7 +40,7 @@ Activate your virtual environment: ``activate yourenv``
 
 You can install in local mode using: ``python setup.py install``
 
-or using pip : ``pip install pecebl``
+or using pip : ``pip install -i https://test.pypi.org/simple/ pecebl``
 
 Getting started
 ===============
@@ -95,8 +95,8 @@ Now we can get the pre-psf data:
 Exposure process
 ----------------
 
-Build the PSF data
-^^^^^^^^^^^^^^^^^^
+Building the PSF data
+^^^^^^^^^^^^^^^^^^^^^
 
 *NP* is the number of pixels, *WF* is the writefield (nm). We can calculate the *pixel_size* then map the two columns data *pre_psf* to a 2D matrix *z_psf* of size *(WF, WF)* $(nm^2)$ (or *(NP, NP)* $(pixel^2)$):
 
@@ -125,8 +125,8 @@ We need to transform the *z_psf* data prior to apply the FFT (Victor Podlozhnyuk
 
 ``del z_psf``
 
-Build the dose distribution
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Building the dose distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We need to 'cut' data in blocks and grid for parallel calculation on GPU.
 
@@ -149,7 +149,7 @@ Exposure
 
 We have the PSF and the dose distribution, we can do a FFT convolution to expose our pattern:
 
-``from pecebl.fft_ops import FFT_ops as fft``
+``from pecebl.fft_ops import fft_ops as fft``
 
 ``z = fft.fft_exposure(ppsf, dose_dis)``
 
@@ -162,7 +162,7 @@ We have the PSF and the dose distribution, we can do a FFT convolution to expose
 Develop
 -------
 
-Development process is simplified by threshold operation. We use a threshold of *3 eV* for ZEP520A ebeam resist.
+The development process is simplified by a threshold operation. We use a threshold of *3 eV* for ZEP520A ebeam resist.
 
 ``th_resist = 3``
 
@@ -170,7 +170,7 @@ Development process is simplified by threshold operation. We use a threshold of 
 
 ``z_dev[z_dev > 0] = 1``
 
-plot de development result:
+plot the development result:
 
 ``plt.imshow(z_dev,origin='lower', extent=[-WF/2, WF/2, -WF/2, WF/2])``
 
