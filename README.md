@@ -12,19 +12,33 @@ pecebl should make it easy:
  - to find the corrected dose distribution by using FFT deconvolution (`pecebl.fft_ops.fft_pec`).
 
 # Installation
-I  strongly recommend using [Anaconda](https://www.anaconda.com/distribution/?gclid=EAIaIQobChMIiaS9soHO5gIVSsDeCh3Lpwh7EAAYASAAEgKWKPD_BwE) distribution for Python
+This package works only with [Anaconda](https://www.anaconda.com/distribution/?gclid=EAIaIQobChMIiaS9soHO5gIVSsDeCh3Lpwh7EAAYASAAEgKWKPD_BwE) distribution for Python
 ## Install the CUDA toolkit and NVIDIA driver
 Download and install CUDA toolkit for your platform [here](https://developer.nvidia.com/cuda-downloads)
 ## Create a python's virtual environment
+### with my yml file:
 The easiest way to create your virtual environment is using my *environment.yml* file:
 
 `conda env create -f environment.yml -n yourenv`
+
+### or:
+#### 1) create your virtual env with conda:
+
+`conda create -n yourenv python=3.7 cudatoolkit pyqt pywin32`
+
+#### 2) install dependencies:
+
+`pip install ipython==7.8.0 jupyter numba numpy scipy sympy pandas pyqtgraph pyopengl matplotlib imageio pyculib pycuda scikit-cuda`
+
 ## install pecebl
 Activate your virtual environment: `activate yourenv`
 
 You can install in local mode using: `python setup.py install`
 
-or using pip : `pip install -i https://test.pypi.org/simple/ pecebl`
+or using pip : `pip install .`
+
+## check installation
+check your installation with : `pecebl --show` if everything is fine you will see an exposure example's plot.
 
 # Getting started
 ## Pattern designer and PSF import
