@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 import os
 
-os.system("conda install -c anaconda cudatoolkit pyqt pywin32")
+# This shouldn't be done here, it will only slow down installation
+#os.system("conda install -c anaconda cudatoolkit pyqt pywin32")
 
 MAJOR = 0
 MINOR = 0
@@ -24,7 +25,7 @@ setup(
     author = "Luan Nguyen",
     author_email = "looninho@gmail.com",
     url = "http://github.com/looninho/pecebl",
-    packages = ['pecebl',],
+    packages = find_packages(),
     include_package_data=True,
     python_requires='>=3.7',
     entry_points={
