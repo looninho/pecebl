@@ -14,7 +14,7 @@ pecebl should make it easy:
 # Installation
 This package works only with [Anaconda](https://www.anaconda.com/distribution/?gclid=EAIaIQobChMIiaS9soHO5gIVSsDeCh3Lpwh7EAAYASAAEgKWKPD_BwE) distribution for Python
 ## Install the CUDA toolkit and NVIDIA driver
-Download and install CUDA toolkit for your platform [here](https://developer.nvidia.com/cuda-downloads)
+Download and install CUDA toolkit v9.1 or v9.2 for your platform [here](https://developer.nvidia.com/cuda-downloads)
 ## Create a python's virtual environment
 ### with my yml file:
 The easiest way to create your virtual environment is using my *environment.yml* file:
