@@ -27,7 +27,7 @@ Description:
         Installation
         ============
         
-        I  strongly recommend using `Anaconda <https://www.anaconda.com/distribution/?gclid=EAIaIQobChMIiaS9soHO5gIVSsDeCh3Lpwh7EAAYASAAEgKWKPD_BwE>`_ distribution for Python
+        This package works only with `Anaconda <https://www.anaconda.com/distribution/?gclid=EAIaIQobChMIiaS9soHO5gIVSsDeCh3Lpwh7EAAYASAAEgKWKPD_BwE>`_ distribution for Python
         
         Install the CUDA toolkit and NVIDIA driver
         ------------------------------------------
@@ -37,9 +37,25 @@ Description:
         Create a python's virtual environment
         -------------------------------------
         
+        with my yml file:
+        ^^^^^^^^^^^^^^^^^
+        
         The easiest way to create your virtual environment is using my *environment.yml* file:
         
         ``conda env create -f environment.yml -n yourenv``
+        
+        or:
+        ^^^
+        
+        1) create your virtual env with conda:
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
+        ``conda create -n yourenv python=3.7 cudatoolkit pyqt pywin32``
+        
+        2) install dependencies:
+        ~~~~~~~~~~~~~~~~~~~~~~~~
+        
+        ``pip install ipython==7.8.0 jupyter numba numpy scipy sympy pandas pyqtgraph pyopengl matplotlib imageio pyculib pycuda scikit-cuda``
         
         install pecebl
         --------------
@@ -48,7 +64,12 @@ Description:
         
         You can install in local mode using: ``python setup.py install``
         
-        or using pip : ``pip install pecebl``
+        or using pip : ``pip install .``
+        
+        check installation
+        ------------------
+        
+        check your installation with : ``pecebl --show`` if everything is fine you will see an exposure example's plot.
         
         Getting started
         ===============
@@ -103,8 +124,8 @@ Description:
         Exposure process
         ----------------
         
-        Build the PSF data
-        ^^^^^^^^^^^^^^^^^^
+        Building the PSF data
+        ^^^^^^^^^^^^^^^^^^^^^
         
         *NP* is the number of pixels, *WF* is the writefield (nm). We can calculate the *pixel_size* then map the two columns data *pre_psf* to a 2D matrix *z_psf* of size *(WF, WF)* $(nm^2)$ (or *(NP, NP)* $(pixel^2)$):
         
@@ -133,8 +154,8 @@ Description:
         
         ``del z_psf``
         
-        Build the dose distribution
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        Building the dose distribution
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         
         We need to 'cut' data in blocks and grid for parallel calculation on GPU.
         
@@ -157,7 +178,7 @@ Description:
         
         We have the PSF and the dose distribution, we can do a FFT convolution to expose our pattern:
         
-        ``from pecebl.fft_ops import FFT_ops as fft``
+        ``from pecebl.fft_ops import fft_ops as fft``
         
         ``z = fft.fft_exposure(ppsf, dose_dis)``
         
@@ -170,7 +191,7 @@ Description:
         Develop
         -------
         
-        Development process is simplified by threshold operation. We use a threshold of *3 eV* for ZEP520A ebeam resist.
+        The development process is simplified by a threshold operation. We use a threshold of *3 eV* for ZEP520A ebeam resist.
         
         ``th_resist = 3``
         
@@ -178,13 +199,13 @@ Description:
         
         ``z_dev[z_dev > 0] = 1``
         
-        plot de development result:
+        plot the development result:
         
         ``plt.imshow(z_dev,origin='lower', extent=[-WF/2, WF/2, -WF/2, WF/2])``
         
         ``plt.show()``
         
-Keywords: lithography,proximity effect correction,ebl,pec,fft,convolution,deconvolution,ebeam-lithography,monte-carlo-simulation,casino3
+Keywords: lithography,proximity effect correction,ebl,pec,fft,convolution,deconvolution,ebeam-lithography,monte-carlo-simulation,casino,casino3
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Science/Research

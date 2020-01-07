@@ -16,5 +16,15 @@ pecebl.egg-info/dependency_links.txt
 pecebl.egg-info/entry_points.txt
 pecebl.egg-info/requires.txt
 pecebl.egg-info/top_level.txt
+pecebl/designer/__init__.py
+pecebl/designer/designer.py
+pecebl/ebl_kernels/__init__.py
+pecebl/ebl_kernels/kernels.py
+pecebl/fft_ops/__init__.py
+pecebl/fft_ops/fft_ops.py
+pecebl/psf_import/__init__.py
+pecebl/psf_import/casino.py
+pecebl/sem/__init__.py
+pecebl/sem/supra40.py
 scripts/__init__.py
 scripts/cli_demo.py
