@@ -61,7 +61,7 @@ def main():
     # iy, i_y  = 3, 3 : we are at the peak of the psf and at the mid-depth of the ebeam resist
     # according to the simulation parameters
     # we prepare the psf:
-    pre_psf=get_pre_psf(1e7, sim, 6, meb.beam_current, i_y=3, i_z=3)
+    pre_psf=get_psf_fct(1e7, sim, 6, meb.beam_current, i_y=3, i_z=3)
 
     #3) Exposure simulation
     #3-1) calculate pixel size

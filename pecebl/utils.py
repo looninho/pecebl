@@ -18,7 +18,7 @@ else:
     def playsound(frequency,duration):
         winsound.Beep(frequency,duration)
 
-def get_pre_psf(sim_electrons, sim, speed_Mhz, beam_current, i_y=3, i_z=3):
+def get_psf_fct(sim_electrons, sim, speed_Mhz, beam_current, i_y=3, i_z=3):
     ''' return the scaled psf data with your hardware specifications.
         Args:
             * sim_electrons (int): the number of simulated electrons
