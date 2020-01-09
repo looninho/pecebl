@@ -1,8 +1,4 @@
 from setuptools import setup, find_packages
-import os
-
-# This shouldn't be done here, it will only slow down installation
-#os.system("conda install -c anaconda cudatoolkit pyqt pywin32")
 
 MAJOR = 0
 MINOR = 0

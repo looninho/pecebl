@@ -1,3 +1,0 @@
-https://anaconda.org/anaconda/cudatoolkit
-https://anaconda.org/anaconda/pyqt
-https://anaconda.org/anaconda/pywin32

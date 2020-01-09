@@ -8,9 +8,9 @@ This package requires a Nvidia's CUDA GPU `capable <https://developer.nvidia.com
 
 A third party software is needed for generating the psf data (i.e.\ `Casino3 <http://www.gel.usherbrooke.ca/casino/>`_\ ).
 
-pecebl gives some basic pattern designer like : ``dot, line, rectangle, ring, circle, move, replace, append``.
+**pecebl** gives some basic pattern designer like : ``dot, line, rectangle, ring, circle, move, replace, append``.
 
-pecebl should make it easy:
+**pecebl** should make it easy:
 
 
 * to simulate a pattern exposure by using the FFT convolution (\ ``pecebl.fft_ops.fft_exposure``\ ).
@@ -19,12 +19,12 @@ pecebl should make it easy:
 Installation
 ============
 
-This package works only with `Anaconda <https://www.anaconda.com/distribution/?gclid=EAIaIQobChMIiaS9soHO5gIVSsDeCh3Lpwh7EAAYASAAEgKWKPD_BwE>`_ distribution for Python
+This package requires `Anaconda <https://www.anaconda.com/distribution/?gclid=EAIaIQobChMIiaS9soHO5gIVSsDeCh3Lpwh7EAAYASAAEgKWKPD_BwE>`_ distribution for Python
 
 Install the CUDA toolkit and NVIDIA driver
 ------------------------------------------
 
-Download and install CUDA toolkit for your platform `here <https://developer.nvidia.com/cuda-downloads>`_
+If not done, download and install CUDA toolkit for your platform `here <https://developer.nvidia.com/cuda-downloads>`_
 
 Create a python's virtual environment
 -------------------------------------
@@ -34,43 +34,82 @@ with my yml file:
 
 The easiest way to create your virtual environment is using my *environment.yml* file:
 
-``conda env create -f environment.yml -n yourenv``
+``conda env create -f environment.yml -n youreblenv``
 
-or:
-^^^
+or if you want to create it by yourself:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1) create your virtual env with conda:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-``conda create -n yourenv python=3.7 cudatoolkit pyqt pywin32``
-
-2) install dependencies:
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-``pip install ipython==7.8.0 jupyter numba numpy scipy sympy pandas pyqtgraph pyopengl matplotlib imageio pyculib pycuda scikit-cuda``
+``conda create -n youreblenv python=3.7 cudatoolkit pyqt pywin32``
 
 install pecebl
 --------------
 
-Activate your virtual environment: ``activate yourenv``
+Activate your virtual environment: ``activate youreblenv``
 
-You can install in local mode using: ``python setup.py install``
+Now you can install **pecebl** in local mode by cd to your local pecebl directory then enter: ``python setup.py install``
 
-or using pip : ``pip install .``
+or using pip : ``pip install pecebl``
 
 check installation
-------------------
+==================
 
 check your installation with : ``pecebl --show`` if everything is fine you will see an exposure example's plot.
 
 Getting started
 ===============
 
-Pattern designer and PSF import
--------------------------------
+I) Building the PSF data
+------------------------
 
-Create a pattern
-^^^^^^^^^^^^^^^^
+We will get at the end of this section a 2D matrix data with the psf at the center. Here are the steps to do:
+
+
+#. Decide the hardware parameters you want to use: the beam energy, the beam current. And the physical properties of your sample.
+#. Get the interaction between the electron beam and your sample. You can do it by experiment or by monte-carlo simulation like `Casino3 <http://www.gel.usherbrooke.ca/casino/>`_. We call it the *psf function*.
+#. Map the *psf function* to a 2D matrix of size equals to the writefield you want to simulate. We call it the *PSF data*.
+   ### I-1) Setup the electron beamer
+   We use a *Zeiss Supra40* SEM with ``30 kV`` and the ``7.5 µm`` aperture
+
+``from pecebl.sem import supra40 as beamer``
+
+``meb = beamer.Supra40(30)``
+
+``meb.change_aperture(7.5)``
+
+``meb.info()``
+
+I-2) Import data from Casino3 simulation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We use the psf file from *Casino3* simulation in ``examples/data`` folder: *ZEP520_1e7_30kV_100mrad_1pt*
+
+``from pecebl.psf_import.Casino import Casino3 as cs3``
+
+``sim=cs3('ZEP520_1e7_30kV_100mrad_1pt')``
+
+The number of electron paths simulated in Casino3 was ``1e7``. The beam writer Raith Elphy Plus has ``6 MHz`` of electronic speed.
+``i_y`` for locating at the peak of the psf and ``i_z`` for placing at the middle depth of the ebeam resist. In this example, I use **Casino3** in a grid size of ``(x=8000, y=0.6, z=310)`` in *nm* divided by ``(nx=8000, ny=6, nz=6)`` dots, hence ``i_y=3`` and ``i_z=3``. Now we can get the ``psf_fct``\ :
+
+``psf_fct=get_psf_fct(1e7, sim, 6, meb.beam_current, i_y=3, i_z=3)``
+
+I-3) Building the PSF data
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``NP`` is the number of pixels, ``WF`` is the writefield *(nm)*. We can calculate the ``pixel_size`` then map the two columns data ``psf_fct`` to a 2D matrix ``z_psf`` of size *(WF, WF)* $(nm^2)$ (or *(NP, NP)* $(pixel^2)$):
+
+``NP = 2048; WF = 5000``
+
+``pixel_size=np.float32(WF/NP)``
+
+``from pecebl.ebl_kernels import kernels as ker``
+
+``z_psf=ker.build_psf(psf_fct, NP, WF, pixel_size, pg.dot(0,0)[0])``
+
+II) Pattern designer
+--------------------
+
+II-1) Create a pattern
+^^^^^^^^^^^^^^^^^^^^^^
 
 Get photonic crystal ``example1`` centered at ``(0,0)``\ , hole radius ``48 nm``\ , pitch ``170 nm`` and stepsize ``4 nm``
 
@@ -84,55 +123,32 @@ Get photonic crystal ``example1`` centered at ``(0,0)``\ , hole radius ``48 nm``
 
 ``plt.axis('equal');plt.show()``
 
-Setup the electron beamer
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Building the dose distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We use a *Zeiss Supra40* SEM with ``30 kV`` and the ``7.5 µm`` aperture
+We need to 'cut' data in blocks and grid for parallel calculation on GPU.
 
-``from pecebl.sem import supra40 as beamer``
+``from sympy.ntheory import primefactors``
 
-``meb = beamer.Supra40(30)``
+``primefactors(final_pattern.shape[0])``
 
-``meb.change_aperture(7.5)``
+So we cut the ``final_pattern`` into grid of blocks size: ``(11*61, 3*137)``
 
-``meb.info()``
+Now we can get dose distribution data: ``dose_dis`` is the initial dose distribution for our pattern. Default dose factor is ``1`` at each dot of the pattern.
 
-Import data from Casino3 software
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(671,1), griddim=(411,1))``
 
-We use the psf file from *Casino3* simulation in ``examples/data`` folder: *ZEP520_1e7_30kV_100mrad_1pt*
+We can change the exposure dose for $30\mu C/cm^2$ (\ ``ss = 4``\ , ``speed = 6``\ ) by multiply a dwelltime factor:
 
-``from pecebl.psf_import.Casino import Casino3 as cs3``
+``dose_dis *= dtfactor(30,4,meb.beam_current,6)``
 
-``sim=cs3('ZEP520_1e7_30kV_100mrad_1pt')``
+III) Exposure process
+---------------------
 
-The number of electron paths simulated in Casino3 was ``1e7``.
-The beam writer Raith Elphy Plus has ``6 MHz`` of electronic speed.
-``i_y`` for locating at the center of the psf and ``i_z`` for placing at the middle depth of the ebeam resist.
-Now we can get the pre-psf data:
+III-1) Padding the PSF data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``pre_psf=get_pre_psf(1e7, sim, 6, meb.beam_current, i_y=3, i_z=3)``
-
-Exposure process
-----------------
-
-Building the PSF data
-^^^^^^^^^^^^^^^^^^^^^
-
-*NP* is the number of pixels, *WF* is the writefield (nm). We can calculate the *pixel_size* then map the two columns data *pre_psf* to a 2D matrix *z_psf* of size *(WF, WF)* $(nm^2)$ (or *(NP, NP)* $(pixel^2)$):
-
-``NP = 2048; WF = 5000``
-
-``pixel_size=np.float32(WF/NP)``
-
-``from pecebl.ebl_kernels import kernels as ker``
-
-``z_psf=ker.build_psf(pre_psf, NP, WF, pixel_size, pg.dot(0,0)[0])``
-
-Padding
-^^^^^^^
-
-We need to transform the *z_psf* data prior to apply the FFT (Victor Podlozhnyuk white paper)
+Before applying the *FFT* transformations, we need to transform the *z_psf* data (Victor Podlozhnyuk white paper)
 
 ``ppsf=np.empty((NP,NP),np.float64)``
 
@@ -146,27 +162,8 @@ We need to transform the *z_psf* data prior to apply the FFT (Victor Podlozhnyuk
 
 ``del z_psf``
 
-Building the dose distribution
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-We need to 'cut' data in blocks and grid for parallel calculation on GPU.
-
-``from sympy.ntheory import primefactors``
-
-``primefactors(final_pattern.shape[0])``
-
-So we cut the *final_pattern* into grid of blocks size: ``(11*61, 3*137)``
-
-Now we can get dose distribution data: *dose_dis* is the initial dose distribution for our pattern. Default dose factor is *1* at each dot of the pattern.
-
-``dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(671,1), griddim=(411,1))``
-
-We can change the exposure dose for $30\mu C/cm^2$ (\ ``ss = 4``\ , ``speed = 6``\ ):
-
-``dose_dis *= dtfactor(30,4,meb.beam_current,6)``
-
-Exposure
-^^^^^^^^
+III-2) Exposure
+^^^^^^^^^^^^^^^
 
 We have the PSF and the dose distribution, we can do a FFT convolution to expose our pattern:
 
@@ -180,10 +177,10 @@ We have the PSF and the dose distribution, we can do a FFT convolution to expose
 
 ``plt.show()``
 
-Develop
--------
+IV) Develop
+-----------
 
-The development process is simplified by a threshold operation. We use a threshold of *3 eV* for ZEP520A ebeam resist.
+The development process is simplified by a threshold operation. We use a threshold of ``3 eV`` for ZEP520A ebeam resist.
 
 ``th_resist = 3``
 
@@ -196,3 +193,40 @@ plot the development result:
 ``plt.imshow(z_dev,origin='lower', extent=[-WF/2, WF/2, -WF/2, WF/2])``
 
 ``plt.show()``
+
+PEC
+===
+
+ In this section, we want to find the dose distribution matrix and we know the target exposure. The way to get this target exposure will be discussed later.
+We start from previous section I) to get the ``z_psf`` and also its padded ``ppsf``
+
+I) Import target exposure
+-------------------------
+
+The example is in the filename *target_ebl_for_pec.npy*
+
+``import zipfile``
+
+``zfile = zipfile.ZipFile("target_ebl_for_pec.zip","r")``
+
+``with zfile as zip_ref:
+    zip_ref.extractall()``
+
+``z_target=np.load(zfile.namelist()[-1])``
+
+``plt.imshow(z_target,origin='upper', extent=[-WF/2, WF/2, -WF/2, WF/2],interpolation="nearest", cmap=plt.cm.jet)``
+
+``plt.show()``
+
+II) Get PEC by deconvolution
+----------------------------
+
+``pec = fft.fft_pec(ppsf,z_target)``
+
+plotting:
+
+``plt.imshow(pec.real,origin='upper', extent=[-WF/2, WF/2, -WF/2, WF/2],interpolation="nearest", cmap=plt.cm.jet)``
+
+``plt.show()``
+
+The ``pec`` found by FFT deconvolution may contain negative values, with a simple operation we can avoid it. Depend on your hardware constraint you could make some adjustment then implement the resulting dose distribution to your hardware to obtain the desired exposure.
