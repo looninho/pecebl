@@ -162,6 +162,7 @@ The example is in the filename *target_ebl_for_pec.npy*
 `zfile = zipfile.ZipFile("target_ebl_for_pec.zip","r")`
 
 `with zfile as zip_ref:
+
     zip_ref.extractall()`
     
 `z_target=np.load(zfile.namelist()[-1])`
