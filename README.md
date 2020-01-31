@@ -100,11 +100,11 @@ We need to 'cut' data in blocks and grid for parallel calculation on GPU.
 
 `primefactors(final_pattern.shape[0])`
 
-So we cut the `final_pattern` into grid of blocks size: `(11*61, 3*137)`
+So we cut the `final_pattern` into grid of blocks size: `(61*11, 137*3)`
 
 Now we can get dose distribution data: `dose_dis` is the initial dose distribution for our pattern. Default dose factor is `1` at each dot of the pattern.
 
-`dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(671,1), griddim=(411,1))`
+`dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(61,11), griddim=(137,3))`
 
 We can change the exposure dose for $30\mu C/cm^2$ (`ss = 4`, `speed = 6`) by multiply a dwelltime factor:
 
