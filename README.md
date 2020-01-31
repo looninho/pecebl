@@ -30,7 +30,11 @@ Activate your virtual environment: `activate youreblenv`
 
 Now you can install **pecebl** in local mode by cd to your local pecebl directory then enter: `python setup.py install`
 
-or using pip : `pip install pecebl`
+or using pip : `python -m pip install pecebl`
+
+You can also link your new *youreblenv* environment to Jupyter so you can choose it as a kernel:
+
+`python -m ipykernel install --user --name youreblenv --display-name "Python 3.7 (pecebl)"`
 
 # check installation
 check your installation when you are in the pecebl root directory with : `pecebl --show` if everything is fine you will see an exposure example's plot.
@@ -100,7 +104,7 @@ So we cut the `final_pattern` into grid of blocks size: `(11*61, 3*137)`
 
 Now we can get dose distribution data: `dose_dis` is the initial dose distribution for our pattern. Default dose factor is `1` at each dot of the pattern.
 
-`dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(671,1), griddim=(411,1))`
+`dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(61,11), griddim=(137,3))`
 
 We can change the exposure dose for $30\mu C/cm^2$ (`ss = 4`, `speed = 6`) by multiply a dwelltime factor:
 
@@ -109,7 +113,7 @@ We can change the exposure dose for $30\mu C/cm^2$ (`ss = 4`, `speed = 6`) by mu
 ## III) Exposure process
 
 ### III-1) Padding the PSF data
-Before applying the *FFT* transformations, we need to transform the *z_psf* data (Victor Podlozhnyuk white paper)
+Before applying the *FFT* transformations, we need to transform the *z_psf* data (Victor Podlozhnyuk white paper): because the PSF data and the exposure data have the same size.
 
 `ppsf=np.empty((NP,NP),np.float64)`
 
@@ -162,10 +166,7 @@ The example is in the filename *target_ebl_for_pec.npy*
 `zfile = zipfile.ZipFile("target_ebl_for_pec.zip","r")`
 
 `with zfile as zip_ref:`
-<<<<<<< HEAD
-=======
 
->>>>>>> c84d49601befa385556df838560249b2533d9d9c
     `zip_ref.extractall()`
     
 `z_target=np.load(zfile.namelist()[-1])`
