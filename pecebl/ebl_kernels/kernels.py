@@ -26,10 +26,14 @@ f2i_gpu = cuda.jit(device=True)(f2i)
 def pattern2matrix(dest, pattern, WF, pxs):
     '''Map the pattern to matrix data.
     It will also correct redundance dots in pattern.'''
-    i = cuda.grid(1)
-    ix = f2i_gpu(pattern[i,0],WF,pxs)
-    iy = f2i_gpu(pattern[i,1],WF,pxs)
-    dest[ix,iy] += pattern[i,2]
+
+    #we use 2D grid of 2D block:
+    blockId = cuda.blockIdx.x + cuda.blockIdx.y * cuda.gridDim.x
+    threadId = blockId * (cuda.blockDim.x * cuda.blockDim.y) \
+        + (cuda.threadIdx.y * cuda.blockDim.x) + cuda.threadIdx.x
+    ix = f2i_gpu(pattern[threadId,0],WF,pxs)
+    iy = f2i_gpu(pattern[threadId,1],WF,pxs)
+    dest[iy,ix] += pattern[threadId,2]
 
 def psf_interp1(r,sr,M,data):
     '''You don't need to use this function.

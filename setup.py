@@ -5,9 +5,10 @@ MINOR = 0
 PATCH = 1
 VERSION = "{}.{}.{}".format(MAJOR, MINOR, PATCH)
 
-def readme():
-    with open('README.rst') as f:
-        return f.read()
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 with open("pecebl/version.py", "w") as f:
     f.write("__version__ = '{}'\n".format(VERSION))
@@ -16,7 +17,8 @@ setup(
     name = "pecebl",
     version = VERSION,
     description = "eBeam Lithography simulation and Proximity Effect Correction",
-    long_description = readme(),
+    long_description = long_description,
+    long_description_content_type='text/markdown',
     license = "GPLv3",
     author = "Luan Nguyen",
     author_email = "looninho@gmail.com",

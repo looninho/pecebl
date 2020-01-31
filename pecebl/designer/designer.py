@@ -151,7 +151,7 @@ def append(pattern1,pattern2):
 
     return a new array
     '''
-    pout=np.append(pattern2,pattern1,axis=0)
+    pout=np.append(pattern1,pattern2,axis=0)
     return pout
 
 def move(x,y,pattern):
@@ -222,7 +222,7 @@ def metasurface1(ss,w=[639.7,119.6],d=[428.6,133.4],bl_corner=[-122249.3,-122500
         c += di
         rec = rectangle(c,-H/2,c+wi,H/2,ss)
         c += wi
-        local_pattern = addPattern(rec,local_pattern)
+        local_pattern = append(local_pattern, rec )
     
     N=np.round(W/T);T_p=W/N
     site_points=line(-W/2,0,W/2,0,T_p)

@@ -39,7 +39,7 @@ The easiest way to create your virtual environment is using my *environment.yml*
 or if you want to create it by yourself:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``conda create -n youreblenv python=3.7 cudatoolkit pyqt pywin32``
+``conda create -n youreblenv python=3.7 cudatoolkit pyqt``
 
 install pecebl
 --------------
@@ -53,7 +53,7 @@ or using pip : ``pip install pecebl``
 check installation
 ==================
 
-check your installation with : ``pecebl --show`` if everything is fine you will see an exposure example's plot.
+check your installation when you are in the pecebl root directory with : ``pecebl --show`` if everything is fine you will see an exposure example's plot.
 
 Getting started
 ===============
@@ -81,14 +81,16 @@ We will get at the end of this section a 2D matrix data with the psf at the cent
 I-2) Import data from Casino3 simulation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We use the psf file from *Casino3* simulation in ``examples/data`` folder: *ZEP520_1e7_30kV_100mrad_1pt*
+We use the psf file from *Casino3* simulation in ``examples/data`` folder: *zep520_1e7_30kV_100mrad_1pt*
 
-``from pecebl.psf_import.Casino import Casino3 as cs3``
+``from pecebl.psf_import.casino import Casino3 as cs3``
 
-``sim=cs3('ZEP520_1e7_30kV_100mrad_1pt')``
+``sim=cs3('zep520_1e7_30kV_100mrad_1pt')``
 
 The number of electron paths simulated in Casino3 was ``1e7``. The beam writer Raith Elphy Plus has ``6 MHz`` of electronic speed.
 ``i_y`` for locating at the peak of the psf and ``i_z`` for placing at the middle depth of the ebeam resist. In this example, I use **Casino3** in a grid size of ``(x=8000, y=0.6, z=310)`` in *nm* divided by ``(nx=8000, ny=6, nz=6)`` dots, hence ``i_y=3`` and ``i_z=3``. Now we can get the ``psf_fct``\ :
+
+``from pecebl.utils import *``
 
 ``psf_fct=get_psf_fct(1e7, sim, 6, meb.beam_current, i_y=3, i_z=3)``
 
@@ -103,6 +105,8 @@ I-3) Building the PSF data
 
 ``from pecebl.ebl_kernels import kernels as ker``
 
+``from pecebl.designer import designer as pg``
+
 ``z_psf=ker.build_psf(psf_fct, NP, WF, pixel_size, pg.dot(0,0)[0])``
 
 II) Pattern designer
@@ -113,11 +117,7 @@ II-1) Create a pattern
 
 Get photonic crystal ``example1`` centered at ``(0,0)``\ , hole radius ``48 nm``\ , pitch ``170 nm`` and stepsize ``4 nm``
 
-``from pecebl.designer import PatternDesigner as pg``
-
 ``final_pattern=pg.example1(a=170, r=48, ss=4)``
-
-``from pecebl.utils import *``
 
 ``plt.plot(final_pattern[:,0], final_pattern[:,1], 'o', ms=1)``
 
@@ -209,8 +209,8 @@ The example is in the filename *target_ebl_for_pec.npy*
 
 ``zfile = zipfile.ZipFile("target_ebl_for_pec.zip","r")``
 
-``with zfile as zip_ref:
-    zip_ref.extractall()``
+``with zfile as zip_ref:``
+    ``zip_ref.extractall()``
 
 ``z_target=np.load(zfile.namelist()[-1])``
 
