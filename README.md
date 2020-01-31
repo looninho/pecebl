@@ -113,7 +113,7 @@ We can change the exposure dose for $30\mu C/cm^2$ (`ss = 4`, `speed = 6`) by mu
 ## III) Exposure process
 
 ### III-1) Padding the PSF data
-Before applying the *FFT* transformations, we need to transform the *z_psf* data (Victor Podlozhnyuk white paper)
+Before applying the *FFT* transformations, we need to transform the *z_psf* data (Victor Podlozhnyuk white paper): because the PSF data and the exposure data have the same size.
 
 `ppsf=np.empty((NP,NP),np.float64)`
 
