@@ -30,7 +30,11 @@ Activate your virtual environment: `activate youreblenv`
 
 Now you can install **pecebl** in local mode by cd to your local pecebl directory then enter: `python setup.py install`
 
-or using pip : `pip install pecebl`
+or using pip : `python -m pip install pecebl`
+
+You can also link your new *youreblenv* environment to Jupyter so you can choose it as a kernel:
+
+`python -m ipykernel install --user --name youreblenv --display-name "Python 3.7 (pecebl)"`
 
 # check installation
 check your installation when you are in the pecebl root directory with : `pecebl --show` if everything is fine you will see an exposure example's plot.
