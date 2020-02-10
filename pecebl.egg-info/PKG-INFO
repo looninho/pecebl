@@ -38,7 +38,11 @@ Description: # pecebl
         
         Now you can install **pecebl** in local mode by cd to your local pecebl directory then enter: `python setup.py install`
         
-        or using pip : `pip install pecebl`
+        or using pip : `python -m pip install pecebl`
+        
+        You can also link your new *youreblenv* environment to Jupyter so you can choose it as a kernel:
+        
+        `python -m ipykernel install --user --name youreblenv --display-name "Python 3.7 (pecebl)"`
         
         # check installation
         check your installation when you are in the pecebl root directory with : `pecebl --show` if everything is fine you will see an exposure example's plot.
@@ -104,11 +108,11 @@ Description: # pecebl
         
         `primefactors(final_pattern.shape[0])`
         
-        So we cut the `final_pattern` into grid of blocks size: `(11*61, 3*137)`
+        So we cut the `final_pattern` into grid of blocks size: `(61*11, 137*3)`
         
         Now we can get dose distribution data: `dose_dis` is the initial dose distribution for our pattern. Default dose factor is `1` at each dot of the pattern.
         
-        `dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(671,1), griddim=(411,1))`
+        `dose_dis = ker.build_dose_distribution(final_pattern, NP, WF, pixel_size, blockdim=(61,11), griddim=(137,3))`
         
         We can change the exposure dose for $30\mu C/cm^2$ (`ss = 4`, `speed = 6`) by multiply a dwelltime factor:
         
@@ -117,7 +121,7 @@ Description: # pecebl
         ## III) Exposure process
         
         ### III-1) Padding the PSF data
-        Before applying the *FFT* transformations, we need to transform the *z_psf* data (Victor Podlozhnyuk white paper)
+        Before applying the *FFT* transformations, we need to transform the *z_psf* data (Victor Podlozhnyuk white paper): because the PSF data and the exposure data have the same size.
         
         `ppsf=np.empty((NP,NP),np.float64)`
         
@@ -170,6 +174,7 @@ Description: # pecebl
         `zfile = zipfile.ZipFile("target_ebl_for_pec.zip","r")`
         
         `with zfile as zip_ref:`
+        
             `zip_ref.extractall()`
             
         `z_target=np.load(zfile.namelist()[-1])`
@@ -188,6 +193,7 @@ Description: # pecebl
         `plt.show()`
         
         The `pec` found by FFT deconvolution may contain negative values, with a simple operation we can avoid it. Depend on your hardware constraint you could make some adjustment then implement the resulting dose distribution to your hardware to obtain the desired exposure.
+        
 Keywords: lithography,proximity effect correction,ebl,pec,fft,convolution,deconvolution,ebeam-lithography,monte-carlo-simulation,casino,casino3
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
