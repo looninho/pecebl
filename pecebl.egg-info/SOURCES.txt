@@ -4,7 +4,9 @@ README.md
 README.rst
 environment.yml
 setup.py
+examples/data/PMMA200_GaN850_Sapphire.sim
 examples/data/ZEP5250A300_Si.sim
+examples/data/pmma_1e7_20kV_100mrad_1pt.dat
 examples/data/target_ebl_for_pec.zip
 examples/data/zep520_1e7_30kV_100mrad_1pt
 pecebl/__init__.py
