@@ -32,7 +32,7 @@ setup(
         ],
     },
     install_requires=[
-        'ipython==7.16.3', 'jupyter', 'numpy','scipy', 
+        'ipython==8.10.0', 'jupyter', 'numpy','scipy', 
         'sympy', 'pandas', 'pyqtgraph', 'pyopengl', 'matplotlib', 
         'imageio', 'pyculib', 'pycuda', 'scikit-cuda',
     ],
